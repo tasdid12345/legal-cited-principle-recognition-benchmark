@@ -1,0 +1,35 @@
+{
+  "question": "Can a pairwise-similarity gradient-boosting model with within-question ranking features beat a standard TF-IDF logistic-regression classifier at recognizing which cited holding a judgement passage relies on (CaseHOLD)?",
+  "method": "Subsampled CaseHOLD questions (5 candidates each); baseline TF-IDF LR on (context, candidate) pairs vs LightGBM on similarity/overlap/length features plus within-question rank and z-scores; hyperparameters chosen by 3-fold CV on train only; one test evaluation, seeds 42-44.",
+  "dataset": {
+    "name": "CaseHOLD (LexGLUE case_hold), random subsample",
+    "source_url": "https://huggingface.co/datasets/coastalcph/lex_glue",
+    "n_rows": 5000,
+    "n_train": 4000,
+    "n_test": 1000,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "top-1 accuracy of choosing the correct holding per question (test)",
+  "higher_is_better": true,
+  "baseline": "TF-IDF word 1-2gram logistic regression on [candidate tfidf, context*candidate tfidf] pair features; best candidate per question; tuned {'C': 0.3}",
+  "improved": "LightGBM on word/char TF-IDF cosine, token overlap, length features and per-question rank/z-score/gap-to-max; tuned {'num_leaves': 7, 'learning_rate': 0.05, 'n_estimators': 100, 'min_child_samples': 30}",
+  "metrics": {
+    "baseline_score": 0.321,
+    "improved_score": 0.5676666666666667,
+    "improvement": 0.24666666666666665,
+    "baseline_score_std": 0.0,
+    "improved_score_std": 0.0016996731711975963,
+    "baseline_f1": 0.575625,
+    "improved_f1": 0.7297916666666667,
+    "baseline_f1_std": 0.0,
+    "improved_f1_std": 0.0010622957319984742,
+    "diff_ci95_low": 0.20499166666666666,
+    "diff_ci95_high": 0.28901666666666653,
+    "baseline_cv_acc": 0.3025006626469211,
+    "improved_cv_acc": 0.6124988893400262,
+    "random_chance_acc": 0.2,
+    "runtime_seconds": 36.2992787361145
+  },
+  "notes": "Stand-in for the paper's non-public corpus; tests recognising a cited principle, not cited facts. Official CaseHOLD train/test splits are randomly subsampled. TF-IDF vectorisers are fitted on training text only (unsupervised, also used inside CV). Macro-F1 is on pair labels (chosen candidate=1). Bootstrap CI resamples test questions using per-question correctness averaged over seeds. Similarity features are lexical, so absolute accuracy is expected to be far below transformer models."
+}
