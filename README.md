@@ -24,6 +24,32 @@ python analysis.py
 ## Results
 Results are written to `results.json` (and a chart to `figures/`).
 
+## Results (latest run)
+
+On the public CaseHOLD dataset (1,000-question test subsample), a standard TF-IDF logistic-regression text classifier reached 32.1% top-1 accuracy, while LightGBM with within-question ranking features reached 56.8% on the same test set, a gain of 24.7 points.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.321 |
+| improved_score | 0.5677 |
+| improvement | 0.2467 |
+| baseline_score_std | 0 |
+| improved_score_std | 0.0017 |
+| baseline_f1 | 0.5756 |
+| improved_f1 | 0.7298 |
+| baseline_f1_std | 0 |
+| improved_f1_std | 0.001062 |
+| diff_ci95_low | 0.205 |
+| diff_ci95_high | 0.289 |
+| baseline_cv_acc | 0.3025 |
+| improved_cv_acc | 0.6125 |
+| random_chance_acc | 0.2 |
+| runtime_seconds | 36.3 |
+
+Run on 2026-10-11. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Stand-in for the paper's non-public corpus; tests recognising a cited principle, not cited facts. Official CaseHOLD train/test splits are randomly subsampled. TF-IDF vectorisers are fitted on training text only (unsupervised, also used inside CV). Macro-F1 is on pair labels (chosen candidate=1). Bootstrap CI resamples test questions using per-question correctness averaged over seeds. Similarity features are lexical, so absolute accuracy is expected to be far below transformer models.
+
 ## Reference
 
 This project is motivated by the following paper:
